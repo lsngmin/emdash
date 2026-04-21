@@ -148,7 +148,12 @@ function mapRowToData(row: Record<string, unknown>): Record<string, unknown> {
 			try {
 				// Only parse if it looks like JSON (starts with { or [)
 				if (value.startsWith("{") || value.startsWith("[")) {
-					data[key] = JSON.parse(value);
+					const parsed = JSON.parse(value);
+					if (parsed?.provider === "local" && parsed?.src) {
+						parsed.id = parsed.id || parsed.src;
+						parsed.src = `/_emdash/api/media/file/${parsed.src}`;
+					}
+					data[key] = parsed;
 				} else {
 					data[key] = value;
 				}
