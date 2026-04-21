@@ -54,7 +54,7 @@ msgstr "(con su puerto de desarrollo)."
 #. placeholder {0}: items.length
 #. placeholder {0}: orphan.rowCount
 #: packages/admin/src/components/ContentTypeList.tsx:69
-#: packages/admin/src/components/RepeaterField.tsx:131
+#: packages/admin/src/components/RepeaterField.tsx:145
 msgid "{0, plural, one {(# item)} other {(# items)}}"
 msgstr "{0, plural, one {(# elemento)} other {(# elementos)}}"
 
@@ -483,11 +483,11 @@ msgstr "Agregar campo"
 msgid "Add fields"
 msgstr "Agregar campos"
 
-#: packages/admin/src/components/RepeaterField.tsx:153
+#: packages/admin/src/components/RepeaterField.tsx:167
 msgid "Add First Item"
 msgstr "Agregar primer elemento"
 
-#: packages/admin/src/components/RepeaterField.tsx:137
+#: packages/admin/src/components/RepeaterField.tsx:151
 msgid "Add Item"
 msgstr "Agregar elemento"
 
@@ -2537,7 +2537,7 @@ msgid "Invite User"
 msgstr "Invitar usuario"
 
 #. placeholder {0}: index + 1
-#: packages/admin/src/components/RepeaterField.tsx:218
+#: packages/admin/src/components/RepeaterField.tsx:232
 msgid "Item {0}"
 msgstr "Artículo {0}"
 
@@ -3192,7 +3192,7 @@ msgstr "No hay campos para comparar"
 msgid "No headings in document"
 msgstr "No hay encabezados en el documento"
 
-#: packages/admin/src/components/RepeaterField.tsx:144
+#: packages/admin/src/components/RepeaterField.tsx:158
 msgid "No items yet"
 msgstr "Aún no hay artículos"
 
@@ -3808,7 +3808,7 @@ msgid "Remove Image?"
 msgstr "¿Quitar imagen?"
 
 #. placeholder {0}: index + 1
-#: packages/admin/src/components/RepeaterField.tsx:254
+#: packages/admin/src/components/RepeaterField.tsx:268
 msgid "Remove item {0}"
 msgstr "Eliminar elemento {0}"
 
@@ -4347,7 +4347,7 @@ msgstr "Seleccionar imagen original"
 msgid "Select which content types to import."
 msgstr "Seleccione qué tipos de contenido importar."
 
-#: packages/admin/src/components/RepeaterField.tsx:349
+#: packages/admin/src/components/RepeaterField.tsx:363
 msgid "Select..."
 msgstr "Seleccionar..."
 

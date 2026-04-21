@@ -54,7 +54,7 @@ msgstr "（開発ポートを使用）。"
 #. placeholder {0}: items.length
 #. placeholder {0}: orphan.rowCount
 #: packages/admin/src/components/ContentTypeList.tsx:69
-#: packages/admin/src/components/RepeaterField.tsx:131
+#: packages/admin/src/components/RepeaterField.tsx:145
 msgid "{0, plural, one {(# item)} other {(# items)}}"
 msgstr "{0, plural, one {（#件）} other {（#件）}}"
 
@@ -483,11 +483,11 @@ msgstr "フィールドを追加"
 msgid "Add fields"
 msgstr "フィールドを追加"
 
-#: packages/admin/src/components/RepeaterField.tsx:153
+#: packages/admin/src/components/RepeaterField.tsx:167
 msgid "Add First Item"
 msgstr "最初のアイテムを追加"
 
-#: packages/admin/src/components/RepeaterField.tsx:137
+#: packages/admin/src/components/RepeaterField.tsx:151
 msgid "Add Item"
 msgstr "アイテムを追加"
 
@@ -2537,7 +2537,7 @@ msgid "Invite User"
 msgstr "ユーザーを招待"
 
 #. placeholder {0}: index + 1
-#: packages/admin/src/components/RepeaterField.tsx:218
+#: packages/admin/src/components/RepeaterField.tsx:232
 msgid "Item {0}"
 msgstr "アイテム {0}"
 
@@ -3192,7 +3192,7 @@ msgstr "比較するフィールドがありません"
 msgid "No headings in document"
 msgstr "ドキュメントに見出しがありません"
 
-#: packages/admin/src/components/RepeaterField.tsx:144
+#: packages/admin/src/components/RepeaterField.tsx:158
 msgid "No items yet"
 msgstr "アイテムはまだありません"
 
@@ -3808,7 +3808,7 @@ msgid "Remove Image?"
 msgstr "画像を削除しますか？"
 
 #. placeholder {0}: index + 1
-#: packages/admin/src/components/RepeaterField.tsx:254
+#: packages/admin/src/components/RepeaterField.tsx:268
 msgid "Remove item {0}"
 msgstr "アイテム{0}を削除"
 
@@ -4347,7 +4347,7 @@ msgstr "OG画像を選択"
 msgid "Select which content types to import."
 msgstr "インポートするコンテンツタイプを選択してください。"
 
-#: packages/admin/src/components/RepeaterField.tsx:349
+#: packages/admin/src/components/RepeaterField.tsx:363
 msgid "Select..."
 msgstr "選択..."
 

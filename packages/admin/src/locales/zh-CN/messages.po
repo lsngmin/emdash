@@ -54,7 +54,7 @@ msgstr "（使用您的开发端口）。"
 #. placeholder {0}: items.length
 #. placeholder {0}: orphan.rowCount
 #: packages/admin/src/components/ContentTypeList.tsx:69
-#: packages/admin/src/components/RepeaterField.tsx:131
+#: packages/admin/src/components/RepeaterField.tsx:145
 msgid "{0, plural, one {(# item)} other {(# items)}}"
 msgstr "{0, plural, one {(# 个项目)} other {(# 个项目)}}"
 
@@ -483,11 +483,11 @@ msgstr "添加字段"
 msgid "Add fields"
 msgstr "添加字段"
 
-#: packages/admin/src/components/RepeaterField.tsx:153
+#: packages/admin/src/components/RepeaterField.tsx:167
 msgid "Add First Item"
 msgstr "添加第一个项目"
 
-#: packages/admin/src/components/RepeaterField.tsx:137
+#: packages/admin/src/components/RepeaterField.tsx:151
 msgid "Add Item"
 msgstr "添加项目"
 
@@ -2537,7 +2537,7 @@ msgid "Invite User"
 msgstr "邀请用户"
 
 #. placeholder {0}: index + 1
-#: packages/admin/src/components/RepeaterField.tsx:218
+#: packages/admin/src/components/RepeaterField.tsx:232
 msgid "Item {0}"
 msgstr "项目 {0}"
 
@@ -3192,7 +3192,7 @@ msgstr "无字段可比较"
 msgid "No headings in document"
 msgstr "文档中无标题"
 
-#: packages/admin/src/components/RepeaterField.tsx:144
+#: packages/admin/src/components/RepeaterField.tsx:158
 msgid "No items yet"
 msgstr "暂无项目"
 
@@ -3808,7 +3808,7 @@ msgid "Remove Image?"
 msgstr "移除图片？"
 
 #. placeholder {0}: index + 1
-#: packages/admin/src/components/RepeaterField.tsx:254
+#: packages/admin/src/components/RepeaterField.tsx:268
 msgid "Remove item {0}"
 msgstr "移除项目 {0}"
 
@@ -4347,7 +4347,7 @@ msgstr "选择 OG 图片"
 msgid "Select which content types to import."
 msgstr "选择要导入的内容类型。"
 
-#: packages/admin/src/components/RepeaterField.tsx:349
+#: packages/admin/src/components/RepeaterField.tsx:363
 msgid "Select..."
 msgstr "选择..."
 
