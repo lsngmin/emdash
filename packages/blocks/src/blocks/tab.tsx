@@ -1,11 +1,12 @@
 import { useState } from "react";
+
 import { BlockRenderer } from "../renderer.js";
 import type { BlockInteraction, TabBlock } from "../types.js";
 
 export function TabBlockComponent({
-																		block,
-																		onAction,
-																	}: {
+	block,
+	onAction,
+}: {
 	block: TabBlock;
 	onAction: (interaction: BlockInteraction) => void;
 }) {

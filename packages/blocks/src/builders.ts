@@ -32,7 +32,7 @@ import type {
 	TextInputElement,
 	ToggleElement,
 	TabBlock,
-	TabPanel
+	TabPanel,
 } from "./types.js";
 
 // ── Block Builders ───────────────────────────────────────────────────────────
@@ -399,10 +399,13 @@ function codeBlock(opts: {
 	};
 }
 
-function tabBlock(panels: TabPanel[], opts?: {
-	defaultTab?: number;
-	blockId?: string
-}): TabBlock {
+function tabBlock(
+	panels: TabPanel[],
+	opts?: {
+		defaultTab?: number;
+		blockId?: string;
+	},
+): TabBlock {
 	return {
 		type: "tab",
 		panels,

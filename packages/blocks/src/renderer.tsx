@@ -12,8 +12,8 @@ import { ImageBlockComponent } from "./blocks/image.js";
 import { MeterBlockComponent } from "./blocks/meter.js";
 import { SectionBlockComponent } from "./blocks/section.js";
 import { StatsBlockComponent } from "./blocks/stats.js";
-import { TableBlockComponent } from "./blocks/table.js";
 import { TabBlockComponent } from "./blocks/tab.js";
+import { TableBlockComponent } from "./blocks/table.js";
 import type { Block, BlockInteraction } from "./types.js";
 
 function renderBlock(
