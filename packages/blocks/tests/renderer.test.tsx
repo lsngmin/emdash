@@ -432,6 +432,52 @@ describe("BlockRenderer", () => {
 		expect(screen.getByText("Right")).toBeTruthy();
 	});
 
+	it("tab block renders panel labels and shows first panel by default", () => {
+		renderBlocks([
+			{
+				type: "tab",
+				panels: [
+					{ label: "General", blocks: [{ type: "header", text: "General Settings" }] },
+					{ label: "Advanced", blocks: [{ type: "header", text: "Advanced Settings" }] },
+				],
+			},
+		]);
+		expect(screen.getByText("General")).toBeTruthy();
+		expect(screen.getByText("Advanced")).toBeTruthy();
+		expect(screen.getByText("General Settings")).toBeTruthy();
+		expect(screen.queryByText("Advanced Settings")).toBeNull();
+	});
+
+	it("tab block switches panel on tab click", () => {
+		renderBlocks([
+			{
+				type: "tab",
+				panels: [
+					{ label: "General", blocks: [{ type: "header", text: "General Settings" }] },
+					{ label: "Advanced", blocks: [{ type: "header", text: "Advanced Settings" }] },
+				],
+			},
+		]);
+		fireEvent.click(screen.getByText("Advanced"));
+		expect(screen.queryByText("General Settings")).toBeNull();
+		expect(screen.getByText("Advanced Settings")).toBeTruthy();
+	});
+
+	it("tab block respects default_tab", () => {
+		renderBlocks([
+			{
+				type: "tab",
+				default_tab: 1,
+				panels: [
+					{ label: "General", blocks: [{ type: "header", text: "General Settings" }] },
+					{ label: "Advanced", blocks: [{ type: "header", text: "Advanced Settings" }] },
+				],
+			},
+		]);
+		expect(screen.queryByText("General Settings")).toBeNull();
+		expect(screen.getByText("Advanced Settings")).toBeTruthy();
+	});
+
 	it("button click fires onAction with block_action", () => {
 		const onAction = vi.fn();
 		renderBlocks(
