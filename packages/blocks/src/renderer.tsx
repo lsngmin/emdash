@@ -13,6 +13,7 @@ import { MeterBlockComponent } from "./blocks/meter.js";
 import { SectionBlockComponent } from "./blocks/section.js";
 import { StatsBlockComponent } from "./blocks/stats.js";
 import { TableBlockComponent } from "./blocks/table.js";
+import { TabBlockComponent } from "./blocks/tab.js";
 import type { Block, BlockInteraction } from "./types.js";
 
 function renderBlock(
@@ -50,6 +51,8 @@ function renderBlock(
 			return <BannerBlockComponent block={block} />;
 		case "code":
 			return <CodeBlockComponent block={block} />;
+		case "tab":
+			return <TabBlockComponent block={block} onAction={onAction} />;
 		default: {
 			const _exhaustive: never = block;
 			return null;
