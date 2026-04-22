@@ -850,7 +850,8 @@ export class EmDashRuntime {
 		const manifestCacheKey = await hashString(
 			[
 				COMMIT,
-				...deps.plugins.map((p) => JSON.stringify({ ...p, options: undefined })).toSorted(),				...deps.sandboxedPluginEntries.map((e) => `${e.id}@${e.version}`).toSorted(),
+				...deps.plugins.map((p) => JSON.stringify({ ...p, options: undefined })).toSorted(),
+				...deps.sandboxedPluginEntries.map((e) => `${e.id}@${e.version}`).toSorted(),
 				virtualConfig?.i18n?.defaultLocale ?? "",
 				(virtualConfig?.i18n?.locales ?? []).toSorted().join(","),
 			].join("|"),
