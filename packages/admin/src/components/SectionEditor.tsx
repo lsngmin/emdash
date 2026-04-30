@@ -6,13 +6,14 @@
 
 import { Button, Input, InputArea, Label, Loader, Toast } from "@cloudflare/kumo";
 import { useLingui } from "@lingui/react/macro";
-import { ArrowLeft } from "@phosphor-icons/react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Link, useParams, useNavigate } from "@tanstack/react-router";
 import * as React from "react";
 
 import { fetchSection, updateSection, type Section, type UpdateSectionInput } from "../lib/api";
 import { slugify } from "../lib/utils";
+import { ArrowPrev } from "./ArrowIcons.js";
+import { EditorHeader } from "./EditorHeader";
 import { PortableTextEditor } from "./PortableTextEditor";
 import { SaveButton } from "./SaveButton";
 
@@ -67,7 +68,7 @@ export function SectionEditor() {
 				<div className="flex items-center gap-4">
 					<Link to="/sections">
 						<Button variant="ghost" shape="square" aria-label={t`Back to sections`}>
-							<ArrowLeft className="h-5 w-5" />
+							<ArrowPrev className="h-5 w-5" />
 						</Button>
 					</Link>
 					<h1 className="text-2xl font-bold">{t`Section Not Found`}</h1>
@@ -147,24 +148,24 @@ function SectionEditorForm({ section, isSaving, onSave }: SectionEditorFormProps
 
 	return (
 		<div className="space-y-6">
-			{/* Header */}
-			<div className="flex items-center justify-between">
-				<div className="flex items-center gap-4">
+			{/* Sticky header — keeps the Save action visible while scrolling
+			    long PortableText content. */}
+			<EditorHeader
+				leading={
 					<Link to="/sections">
 						<Button variant="ghost" shape="square" aria-label={t`Back to sections`}>
-							<ArrowLeft className="h-5 w-5" />
+							<ArrowPrev className="h-5 w-5" />
 						</Button>
 					</Link>
-					<div>
-						<h1 className="text-2xl font-bold">{section.title}</h1>
-						<p className="text-sm text-kumo-subtle">
-							{section.source === "theme" ? t`Theme Section` : t`Custom Section`} &middot;{" "}
-							{section.slug}
-						</p>
-					</div>
-				</div>
-				<SaveButton isSaving={isSaving} isDirty={isDirty} onClick={handleSave} />
-			</div>
+				}
+				actions={<SaveButton isSaving={isSaving} isDirty={isDirty} onClick={handleSave} />}
+			>
+				<h1 className="text-2xl font-bold truncate">{section.title}</h1>
+				<p className="text-sm text-kumo-subtle">
+					{section.source === "theme" ? t`Theme Section` : t`Custom Section`} &middot;{" "}
+					{section.slug}
+				</p>
+			</EditorHeader>
 
 			<div className="grid grid-cols-12 gap-6">
 				{/* Main content */}
@@ -201,7 +202,7 @@ function SectionEditorForm({ section, isSaving, onSave }: SectionEditorFormProps
 									setSlugTouched(true);
 								}}
 								placeholder="section-slug"
-								pattern="[a-z0-9-]+"
+								pattern="[a-z0-9\-]+"
 							/>
 							<p className="text-xs text-kumo-subtle mt-1">
 								{t`Used to identify this section. Lowercase letters, numbers, and hyphens only.`}
