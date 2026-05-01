@@ -1,4 +1,5 @@
 import type {
+	AccordionBlock,
 	ActionsBlock,
 	BannerBlock,
 	Block,
@@ -17,11 +18,13 @@ import type {
 	RepeaterSubField,
 	DividerBlock,
 	Element,
+	EmptyBlock,
 	FieldsBlock,
 	FormBlock,
 	FormField,
 	HeaderBlock,
 	ImageBlock,
+	MediaPickerElement,
 	MeterBlock,
 	NumberInputElement,
 	SecretInputElement,
@@ -350,6 +353,25 @@ function repeater(
 	};
 }
 
+function mediaPicker(
+	actionId: string,
+	label: string,
+	opts?: {
+		mimeTypeFilter?: string;
+		initialValue?: string;
+		placeholder?: string;
+	},
+): MediaPickerElement {
+	return {
+		type: "media_picker",
+		action_id: actionId,
+		label,
+		...(opts?.mimeTypeFilter !== undefined && { mime_type_filter: opts.mimeTypeFilter }),
+		...(opts?.initialValue !== undefined && { initial_value: opts.initialValue }),
+		...(opts?.placeholder !== undefined && { placeholder: opts.placeholder }),
+	};
+}
+
 function timeseriesChart(opts: {
 	blockId?: string;
 	series: ChartSeries[];
@@ -422,6 +444,40 @@ function codeBlock(opts: {
 	};
 }
 
+function empty(opts: {
+	blockId?: string;
+	title: string;
+	description?: string;
+	commandLine?: string;
+	size?: "sm" | "base" | "lg";
+	actions?: Element[];
+}): EmptyBlock {
+	return {
+		type: "empty",
+		title: opts.title,
+		...(opts.description !== undefined && { description: opts.description }),
+		...(opts.commandLine !== undefined && { command_line: opts.commandLine }),
+		...(opts.size !== undefined && { size: opts.size }),
+		...(opts.actions !== undefined && { actions: opts.actions }),
+		...(opts.blockId !== undefined && { block_id: opts.blockId }),
+	};
+}
+
+function accordion(opts: {
+	blockId?: string;
+	label: string;
+	blocks: Block[];
+	defaultOpen?: boolean;
+}): AccordionBlock {
+	return {
+		type: "accordion",
+		label: opts.label,
+		blocks: opts.blocks,
+		...(opts.defaultOpen !== undefined && { default_open: opts.defaultOpen }),
+		...(opts.blockId !== undefined && { block_id: opts.blockId }),
+	};
+}
+
 // ── Exports ──────────────────────────────────────────────────────────────────
 
 export const blocks = {
@@ -441,6 +497,8 @@ export const blocks = {
 	banner: bannerBlock,
 	meter,
 	code: codeBlock,
+	empty,
+	accordion,
 };
 
 export const elements = {
@@ -455,4 +513,5 @@ export const elements = {
 	dateInput,
 	radio,
 	repeater,
+	mediaPicker,
 };

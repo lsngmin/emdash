@@ -24,6 +24,7 @@ export type {
 	RadioElement,
 	RepeaterElement,
 	RepeaterSubField,
+	MediaPickerElement,
 	Element,
 	// Form
 	FieldCondition,
@@ -51,6 +52,8 @@ export type {
 	CodeBlock,
 	BannerBlock,
 	MeterBlock,
+	EmptyBlock,
+	AccordionBlock,
 	Block,
 	// Interactions
 	BlockAction,

@@ -111,6 +111,7 @@ import {
 	DEFAULT_COMMENT_MODERATOR_PLUGIN_ID,
 	defaultCommentModerate,
 } from "./comments/moderator.js";
+import { validateEncryptionKeyAtStartup } from "./config/secrets.js";
 import { OptionsRepository } from "./database/repositories/options.js";
 import {
 	handleContentList,
@@ -683,6 +684,13 @@ export class EmDashRuntime {
 		// Initialize database (connects, runs migrations if needed)
 		const db = await phase("rt.db", "DB init + migrations", () => EmDashRuntime.getDatabase(deps));
 
+		// Validate EMDASH_ENCRYPTION_KEY once here so a malformed value
+		// surfaces in startup logs instead of as request-time 500s. The key
+		// itself is not yet consumed (a follow-up PR adds plugin-secret
+		// encryption); validating early just guards against silent
+		// misconfiguration.
+		await phase("rt.secrets", "Validate encryption key", () => validateEncryptionKeyAtStartup());
+
 		// FTS verify/repair is deferred off the cold-start hot path.
 		// See EmDashRuntime.ensureSearchHealthy().
 
@@ -746,7 +754,7 @@ export class EmDashRuntime {
 				const devConsolePlugin = definePlugin({
 					id: DEV_CONSOLE_EMAIL_PLUGIN_ID,
 					version: "0.0.0",
-					capabilities: ["email:provide"],
+					capabilities: ["hooks.email-transport:register"],
 					hooks: {
 						"email:deliver": {
 							exclusive: true,
@@ -769,7 +777,7 @@ export class EmDashRuntime {
 			const defaultModeratorPlugin = definePlugin({
 				id: DEFAULT_COMMENT_MODERATOR_PLUGIN_ID,
 				version: "0.0.0",
-				capabilities: ["read:users"],
+				capabilities: ["users:read"],
 				hooks: {
 					"comment:moderate": {
 						exclusive: true,
@@ -1460,6 +1468,7 @@ export class EmDashRuntime {
 					description?: string;
 					placeholder?: string;
 					fields?: Element[];
+					category?: string;
 				}>;
 				fieldWidgets?: Array<{
 					name: string;
@@ -1604,17 +1613,28 @@ export class EmDashRuntime {
 		this._cachedManifest = null;
 		this._manifestPromise = null;
 		invalidateUrlPatternCache();
-		// Delete DB-persisted cache so the next cold start rebuilds.
-		// Fire-and-forget: in-memory is already cleared for this worker,
-		// DB delete is best-effort for the next cold start.
-		try {
-			const options = new OptionsRepository(this.db);
-			options.delete("emdash:manifest_cache").catch((error) => {
-				console.error("Failed to delete persisted manifest cache", error);
-			});
-		} catch (error) {
-			console.error("Failed to initialize manifest cache invalidation", error);
-		}
+		// Delete the DB-persisted cache so the next cold-starting isolate
+		// rebuilds from `_emdash_collections` instead of adopting a
+		// pre-mutation snapshot. The `_manifestCacheKey` check in
+		// `getManifest()` doesn't include schema content (commit + plugin
+		// versions + i18n only), so collection adds/removes/renames don't
+		// change the key — stale rows will pass the check.
+		//
+		// On Cloudflare Workers, work that's not registered with the host's
+		// lifetime extender is cancelled the moment the response is sent.
+		// `after()` hands the promise to `ctx.waitUntil` under workerd (and
+		// fire-and-forgets on Node, which keeps running anyway). Without it,
+		// every Cloudflare-based deploy would leave the row stale until
+		// something else wiped it. (Issue #873.)
+		const db = this.db;
+		after(async () => {
+			try {
+				const options = new OptionsRepository(db);
+				await options.delete("emdash:manifest_cache");
+			} catch (error) {
+				console.error("[emdash] Failed to delete persisted manifest cache:", error);
+			}
+		});
 	}
 
 	/**
