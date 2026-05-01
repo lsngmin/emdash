@@ -22,6 +22,9 @@ export type {
 	ComboboxElement,
 	DateInputElement,
 	RadioElement,
+	RepeaterElement,
+	RepeaterSubField,
+	MediaPickerElement,
 	Element,
 	// Form
 	FieldCondition,
@@ -51,6 +54,8 @@ export type {
 	TabBlock,
 	BannerBlock,
 	MeterBlock,
+	EmptyBlock,
+	AccordionBlock,
 	Block,
 	// Interactions
 	BlockAction,

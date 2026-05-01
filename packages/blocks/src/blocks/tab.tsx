@@ -1,3 +1,4 @@
+import { Tabs } from "@cloudflare/kumo";
 import { useState } from "react";
 
 import { BlockRenderer } from "../renderer.js";
@@ -11,24 +12,16 @@ export function TabBlockComponent({
 	onAction: (interaction: BlockInteraction) => void;
 }) {
 	const [activeTab, setActiveTab] = useState(block.default_tab ?? 0);
+	const tabs = block.panels.map((panel, i) => ({ value: String(i), label: panel.label }));
 
 	return (
 		<div>
-			<div className="flex border-b border-border">
-				{block.panels.map((panel, i) => (
-					<button
-						key={i}
-						onClick={() => setActiveTab(i)}
-						className={`px-4 py-2 text-sm font-medium -mb-px border-b-2 transition-colors ${
-							activeTab === i
-								? "border-kumo-link text-kumo-link"
-								: "border-transparent text-kumo-subtle hover:text-kumo-default"
-						}`}
-					>
-						{panel.label}
-					</button>
-				))}
-			</div>
+			<Tabs
+				variant="underline"
+				value={String(activeTab)}
+				onValueChange={(value) => setActiveTab(Number(value))}
+				tabs={tabs}
+			/>
 			<div className="pt-4">
 				<BlockRenderer blocks={block.panels[activeTab]?.blocks ?? []} onAction={onAction} />
 			</div>

@@ -43,6 +43,7 @@ import {
 } from "../emdash-runtime.js";
 import { setI18nConfig } from "../i18n/config.js";
 import type { Database, Storage } from "../index.js";
+import { createPublicMediaUrlResolver } from "../media/url.js";
 import type { SandboxRunner } from "../plugins/sandbox/types.js";
 import type { ResolvedPlugin } from "../plugins/types.js";
 import { getRequestContext, runWithContext } from "../request-context.js";
@@ -232,6 +233,20 @@ export const onRequest = defineMiddleware(async (context, next) => {
 	const { request, locals, cookies } = context;
 	const url = context.url;
 
+	// Fast path: routes outside /_emdash/ that plugins inject (e.g.,
+	// /.well-known/atproto-client-metadata.json) skip the entire runtime
+	// init + middleware chain. External servers fetch these with tight
+	// timeouts (~1-2s) so they must respond quickly even on cold starts.
+	if (!url.pathname.startsWith("/_emdash") && virtualConfig?.authProviders) {
+		const isPluginFastRoute = virtualConfig.authProviders.some(
+			(p: { routes?: { pattern?: string }[] }) =>
+				p.routes?.some((r: { pattern?: string }) => r.pattern && url.pathname === r.pattern),
+		);
+		if (isPluginFastRoute) {
+			return finalizeResponse(await next());
+		}
+	}
+
 	const queryRecorder = isInstrumentationEnabled()
 		? createRecorder(url.pathname, request.method, request.headers.get("x-perf-phase") ?? "default")
 		: undefined;
@@ -256,8 +271,15 @@ export const onRequest = defineMiddleware(async (context, next) => {
 		// Read the Astro session user once up-front. Both the anonymous fast path
 		// and the full doInit path need this, and the session store is network-backed
 		// (KV / Durable Object) so we want to avoid re-fetching on the hot path.
-		// Skipped entirely for prerendered requests — they have no session.
-		const sessionUser = context.isPrerendered ? null : await context.session?.get("user");
+		// Skipped entirely for:
+		//   - prerendered requests (no session at build time)
+		//   - requests without an `astro-session` cookie (no session to look up)
+		// The cookie check matters on Cloudflare Workers, where Astro's session
+		// backend is KV: calling session.get() on every anonymous public request
+		// turns normal traffic into a flood of KV read misses. See #733.
+		const hasSessionCookie = cookies.get("astro-session") !== undefined;
+		const sessionUser =
+			context.isPrerendered || !hasSessionCookie ? null : await context.session?.get("user");
 
 		if (!isEmDashRoute && !isPublicRuntimeRoute && !hasEditCookie && !hasPreviewToken) {
 			if (!sessionUser && !playgroundDb) {
@@ -301,10 +323,11 @@ export const onRequest = defineMiddleware(async (context, next) => {
 					try {
 						const runtime = await getRuntime(config, initSubTimings);
 						setupVerified = true;
-						// eslint-disable-next-line typescript-eslint(no-unsafe-type-assertion) -- partial object; getPageRuntime() only checks for these two methods
+						// eslint-disable-next-line typescript-eslint(no-unsafe-type-assertion) -- partial object; getPageRuntime() only checks for the page-contribution methods
 						locals.emdash = {
 							collectPageMetadata: runtime.collectPageMetadata.bind(runtime),
 							collectPageFragments: runtime.collectPageFragments.bind(runtime),
+							getPublicMediaUrl: createPublicMediaUrlResolver(runtime.storage),
 						} as EmDashHandlers;
 					} catch {
 						// Non-fatal — EmDashHead will fall back to base SEO contributions
@@ -445,6 +468,7 @@ export const onRequest = defineMiddleware(async (context, next) => {
 					// Direct access (for advanced use cases)
 					storage: runtime.storage,
 					db: runtime.db,
+					getPublicMediaUrl: createPublicMediaUrlResolver(runtime.storage),
 					hooks: runtime.hooks,
 					email: runtime.email,
 					configuredPlugins: runtime.configuredPlugins,
